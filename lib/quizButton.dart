@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class QuizButton extends StatelessWidget {
-  const QuizButton({
+  QuizButton({
     Key? key,
-    required this.isTrue,
+    required this.baskanda,
+    required this.tuuraButtonbu,
   }) : super(key: key);
 
-  final bool isTrue;
+  final bool tuuraButtonbu;
+  final void Function(bool) baskanda;
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +17,11 @@ class QuizButton extends StatelessWidget {
       width: double.infinity,
       height: 30,
       child: ElevatedButton(
-        onPressed: () {},
-        child: Text(isTrue ? 'туура' : 'туура эмес',
+        onPressed: () => baskanda(tuuraButtonbu),
+        child: Text(tuuraButtonbu ? 'туура' : 'туура эмес',
             style: const TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          primary: isTrue ? Color(0xff4cAF52) : Color(0xffF54335),
+          backgroundColor: tuuraButtonbu ? const Color(0xff4cAF52) : const Color(0xffF54335),
         ),
       ),
     );

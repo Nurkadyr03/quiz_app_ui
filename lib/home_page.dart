@@ -1,13 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:qestion_app/model/quiz_model.dart';
 import 'package:qestion_app/quizButton.dart';
 import 'package:qestion_app/result_icon.dart';
 
-class HomePage extends StatelessWidget {
+
+import 'draver.dart';
+
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int index = 0;
+  List jooptor = <bool>[];
+  List tuura_Jooptor = <bool>[];
+  List tuura_emes_Jooptor = <bool>[];
+  void teksher(bool value) {
+    setState(() {});
+    if (quizzes[index].answer == value) {
+      jooptor.add(true);
+      tuura_Jooptor.add(true);
+    } else {
+      jooptor.add(false);
+      tuura_emes_Jooptor.add(true);
+    }
+
+    if (quizzes[index] == quizzes.last) {
+      index = 0;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                AlertDialog(
+                 backgroundColor: Colors.black26,
+                  title: const Text('Testtin jyiyntygy ',style:TextStyle(color:Colors.white)),
+                  content: Text(
+                      'Tuurasay: ${tuura_Jooptor.length}   Tuura emesi : ${tuura_emes_Jooptor.length}',style: const TextStyle(color:Colors.white),),
+                  icon: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                        if (tuura_Jooptor.length > 0) {
+                          tuura_Jooptor.clear();
+                          tuura_emes_Jooptor.clear();
+                        }
+                        ;
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.blue,
+                        size: 30.0,
+                      )),
+                ),
+              ],
+            );
+          });
+      jooptor.clear();
+    } else {
+      index++;
+    }
+  
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const Drawer(
+        child: DriversPage(),
+      ),
       backgroundColor: const Color(0xff202020),
       appBar: AppBar(
         centerTitle: true,
@@ -25,34 +89,47 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Spacer(),
+            const Spacer(),
             Text(
-              'Кыргызстанда 7 область барбы?',
-              style: TextStyle(
+              quizzes[index].question,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             QuizButton(
-              isTrue: true,
+              tuuraButtonbu: true,
+              baskanda: (maani) {
+                teksher(maani);
+              },
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             QuizButton(
-              isTrue: false,
+              tuuraButtonbu: false,
+              baskanda: (maani) {
+                teksher(maani);
+              },
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            Row(
-              children: [
-                ResultIcon(isTrue: true),
-                ResultIcon(isTrue: false),
-              ],
-            ),
             SizedBox(
+              height: 40,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: jooptor.length,
+                itemBuilder: (BuildContext context, int i) {
+                  return jooptor[i]
+                      ? const ResultIcon(isTrue: true)
+                      : const ResultIcon(isTrue: false);
+                },
+              ),
+            ),
+           
+            const SizedBox(
               height: 50,
             ),
           ],
